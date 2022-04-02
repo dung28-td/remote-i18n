@@ -1,0 +1,9 @@
+{
+  "name": "remote-i18n",
+  "version": "1.0.0",
+  "description": "Lightweight I18n library for React",
+  "main": "index.js",
+  "repository": "https://github.com/dung28-td/remote-i18n",
+  "author": "dung28-td",
+  "license": "MIT"
+}
