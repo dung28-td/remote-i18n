@@ -6,12 +6,13 @@ export interface I18nData {
 
 export interface I18nContext {
   locale: string
+  setLocale: (locale: string) => void
   data: I18nData
 }
 
 export interface I18nProviderProps {
   apiKey: string
-  locale: string
+  initialLocale: string
   data?: I18nData
 }
 

@@ -9,7 +9,7 @@ const canUseDOM = !!(
   window.document.createElement
 )
 
-const useEnhancedEffect = canUseDOM ? useLayoutEffect : useEffect
+export const useEnhancedEffect = canUseDOM ? useLayoutEffect : useEffect
 
 export const useEnhancedMountedEffect = (effect: EffectCallback) => {
   const mounted = useRef(false)

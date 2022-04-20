@@ -1,7 +1,7 @@
-import React, { createContext, useContext } from 'react'
+import React, { createContext, useContext, useReducer } from 'react'
 import useData from './use-data'
 import DataMutation from './data-mutation'
-import { __DEV__ } from './utils'
+import { useEnhancedEffect, __DEV__ } from './utils'
 import type { I18nContext, I18nProviderProps } from './types'
 
 /**
@@ -9,6 +9,7 @@ import type { I18nContext, I18nProviderProps } from './types'
  */
 const defaultI18nContext = {
   locale: '',
+  setLocale: () => {},
   data: {}
 }
 
@@ -22,8 +23,14 @@ export const useI18n = () => useContext(I18nContext)
 /**
  * I18nProvider component
  */
-export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, locale, data: initialData, children }) => {
+export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocale, data: initialData, children }) => {
   const { loading, data, error } = useData(initialData, apiKey)
+  const [locale, setLocale] = useReducer((_: string, v: string) => v, initialLocale)
+
+  useEnhancedEffect(() => {
+    if (!!locale || !data || !!data[locale]) return
+    setLocale(Object.keys(data)[0])
+  }, [data])
 
   if (!data) {
     if (loading) return <div>Loading...</div>
@@ -34,7 +41,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, locale, data
   if (__DEV__) return (
     <DataMutation apiKey={apiKey} data={data}>
       {data => (
-        <I18nContext.Provider value={{ locale, data }}>
+        <I18nContext.Provider value={{ locale, setLocale, data }}>
           {children}
         </I18nContext.Provider>
       )}
@@ -42,7 +49,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, locale, data
   )
 
   return (
-    <I18nContext.Provider value={{ locale, data }}>
+    <I18nContext.Provider value={{ locale, setLocale, data }}>
       {children}
     </I18nContext.Provider>
   )
