@@ -19,3 +19,7 @@ export interface I18nProviderProps {
 export interface TProps {
   id: string
 }
+
+export interface I18nScopeProps {
+  scope: string
+}
