@@ -5,8 +5,8 @@ export default {
     const res = await fetch(`${API_URL}/data?api_key=${apiKey}`)
     return await res.json()
   },
-  createIdentity: (value: string, apiKey: string) => fetch(`${API_URL}/identities`, {
+  createIdentity: (value: string, apiKey: string) => fetch(`${API_URL}/identities?api_key=${apiKey}`, {
     method: 'POST',
-    body: JSON.stringify({ value, apiKey })
+    body: JSON.stringify({ value })
   })
 }

@@ -27,3 +27,15 @@ export const debounce = (callback: () => void, ms: number) => {
   if (timer) clearTimeout(timer)
   debouncedTimers.set(callback, setTimeout(callback, ms))
 }
+
+export const useSSE = (url: string, listener: (ev: MessageEvent) => void) => {
+  useEnhancedEffect(() => {
+    const es = new EventSource(url)
+    es.addEventListener('message', listener)
+
+    return () => {
+      es.removeEventListener('message', listener)
+      es.close()
+    }
+  }, [])
+}

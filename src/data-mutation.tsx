@@ -1,6 +1,7 @@
 import React, { useReducer } from "react"
 import api from './api'
-import { debounce } from "./utils"
+import { debounce, useSSE } from "./utils"
+import { STREAM_URL } from "./constants"
 import type { I18nData } from "./types"
 
 interface DataMutationProps {
@@ -36,6 +37,11 @@ export default function DataMutation({ apiKey: _apiKey, data: origData, children
 
   if (dispatch !== _dispatch) dispatch = _dispatch
   if (apiKey !== _apiKey) apiKey = _apiKey
+
+  useSSE(`${STREAM_URL}/stream?api_key=${apiKey}`, e => {
+    const data = JSON.parse(e.data) as I18nData
+    dispatch({ type: 'RESET', data })
+  })
 
   return children(data)
 }
