@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useReducer } from 'react'
+import React, { createContext, useContext, useMemo, useReducer } from 'react'
 import useData from './use-data'
 import DataMutation from './data-mutation'
-import { useEnhancedEffect, __DEV__ } from './utils'
+import { __DEV__ } from './utils'
 import type { I18nContext, I18nProviderProps } from './types'
+import errors from './errors'
 
 /**
  * Create I18nContext
@@ -23,14 +24,17 @@ export const useI18n = () => useContext(I18nContext)
 /**
  * I18nProvider component
  */
-export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocale, data: initialData, children }) => {
+export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocale = '', data: initialData, children }) => {
   const { loading, data, error } = useData(initialData, apiKey)
-  const [locale, setLocale] = useReducer((_: string, v: string) => v, initialLocale)
+  const [_locale, setLocale] = useReducer((_: string, v: string) => v, initialLocale)
 
-  useEnhancedEffect(() => {
-    if (!!locale || !data || !!data[locale]) return
-    setLocale(Object.keys(data)[0])
-  }, [data])
+  const locale = useMemo(() => {
+    if (!data) return ''
+    const locales = Object.keys(data)
+    if (locales.includes(_locale)) return _locale
+    if (__DEV__ && _locale) console.error(errors.MISSING_LOCALE(_locale))
+    return locales[0]
+  }, [data, _locale])
 
   if (!data) {
     if (loading) return <div>Loading...</div>

@@ -12,7 +12,7 @@ export interface I18nContext {
 
 export interface I18nProviderProps {
   apiKey: string
-  initialLocale: string
+  initialLocale?: string
   data?: I18nData
 }
 

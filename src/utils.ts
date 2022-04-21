@@ -1,5 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react"
+import errors from "./errors"
 import type { EffectCallback } from 'react'
+import type { I18nData } from "./types"
 
 export const __DEV__ = process.env.NODE_ENV === 'development'
 
@@ -38,4 +40,16 @@ export const useSSE = (url: string, listener: (ev: MessageEvent) => void) => {
       es.close()
     }
   }, [])
+}
+
+export const throwError = (msg: string) => {
+  throw new Error(`[remote-i18n] ${msg}`)
+}
+
+export const checkDataValidity = (data: I18nData) => {
+  const locales = Object.keys(data)
+
+  if (locales.length === 0) {
+    throwError(errors.EMPTY_LOCALES)
+  }
 }
