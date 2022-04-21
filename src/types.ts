@@ -24,7 +24,10 @@ export interface TProps extends TOptions {
   id: string
 }
 
-export interface I18nScopeProps {
-  scope: string
+export interface I18nScopeOptions {
   absolute?: boolean
+}
+
+export interface I18nScopeProps extends I18nScopeOptions {
+  scope: string
 }
