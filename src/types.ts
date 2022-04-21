@@ -16,10 +16,15 @@ export interface I18nProviderProps {
   data?: I18nData
 }
 
-export interface TProps {
+export interface TOptions {
+  absolute?: boolean
+}
+
+export interface TProps extends TOptions {
   id: string
 }
 
 export interface I18nScopeProps {
   scope: string
+  absolute?: boolean
 }
