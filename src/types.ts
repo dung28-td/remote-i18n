@@ -18,6 +18,7 @@ export interface I18nProviderProps {
 
 export interface TOptions {
   absolute?: boolean
+  values?: Obj<string>
 }
 
 export interface TProps extends TOptions {
@@ -30,4 +31,8 @@ export interface I18nScopeOptions {
 
 export interface I18nScopeProps extends I18nScopeOptions {
   scope: string
+}
+
+export interface Obj<T> {
+  [key: string]: T
 }
