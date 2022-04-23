@@ -19,6 +19,7 @@ export interface I18nProviderProps {
 export interface TOptions {
   absolute?: boolean
   values?: Obj<string>
+  template?: Obj<RenderHTML>
 }
 
 export interface TProps extends TOptions {
@@ -36,3 +37,10 @@ export interface I18nScopeProps extends I18nScopeOptions {
 export interface Obj<T> {
   [key: string]: T
 }
+
+export interface RenderHTMLProps {
+  attributes: Obj<string> | undefined
+  children: string | JSX.Element
+}
+
+export type RenderHTML = (props: RenderHTMLProps) => JSX.Element
