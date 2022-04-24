@@ -24,7 +24,7 @@ export const useI18n = () => useContext(I18nContext)
 /**
  * I18nProvider component
  */
-export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocale = '', data: initialData, children }) => {
+export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocale = '', data: initialData, template, children }) => {
   const { loading, data, error } = useData(initialData, apiKey)
   const [_locale, setLocale] = useReducer((_: string, v: string) => v, initialLocale)
 
@@ -45,7 +45,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocal
   if (__DEV__) return (
     <DataMutation apiKey={apiKey} data={data}>
       {data => (
-        <I18nContext.Provider value={{ locale, setLocale, data }}>
+        <I18nContext.Provider value={{ locale, setLocale, data, template }}>
           {children}
         </I18nContext.Provider>
       )}
@@ -53,7 +53,7 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ apiKey, initialLocal
   )
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, data }}>
+    <I18nContext.Provider value={{ locale, setLocale, data, template }}>
       {children}
     </I18nContext.Provider>
   )

@@ -8,12 +8,14 @@ export interface I18nContext {
   locale: string
   setLocale: (locale: string) => void
   data: I18nData
+  template?: Obj<RenderHTML>
 }
 
 export interface I18nProviderProps {
   apiKey: string
   initialLocale?: string
   data?: I18nData
+  template?: Obj<RenderHTML>
 }
 
 export interface TOptions {
