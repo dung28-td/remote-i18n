@@ -1,6 +1,6 @@
 import React, { useReducer } from "react"
 import api from './api'
-import { debounce, useSSE } from "./utils"
+import { debounce, useEnhancedEffect, useSSE } from "./utils"
 import { STREAM_URL } from "./constants"
 import type { I18nData } from "./types"
 
@@ -43,6 +43,11 @@ export default function DataMutation({ apiKey: _apiKey, data: origData, children
     dispatch({ type: 'RESET', data })
   })
 
+  useEnhancedEffect(() => {
+    if (origData === data) return
+    dispatch({ type: 'RESET', data: origData })
+  }, [origData])
+
   return children(data)
 }
 
@@ -50,8 +55,8 @@ const createTranslationHdrPerId: { [id: string]: () => void } = {}
 export const createTranslation = (id: string) => {
   if (!createTranslationHdrPerId[id]) {
     createTranslationHdrPerId[id] = async () => {
-      await api.createIdentity(id, apiKey)
-      dispatch({ type: 'CREATE_TRANSLATION', id })
+      const res = await api.createIdentity(id, apiKey)
+      if (res.ok) dispatch({ type: 'CREATE_TRANSLATION', id })
     }
   }
   debounce(createTranslationHdrPerId[id], 100)
