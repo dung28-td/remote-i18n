@@ -20,13 +20,15 @@ const translations = {
   hello_world_single_html: "Hello <b>world</b>!",
   hello_world_multiple_html: "Hello <b>world</b> and <small>me</small>!",
   hello_world_nested_html: "Hello <b>world and <small>me</small></b>!",
-  hello_world_html_attributes: "Hello <span id='id' className='class1 class2' data-testid='test'>world</span>!"
+  hello_world_html_attributes: "Hello <span id='id' className='class1 class2' data-testid='test'>world</span>!",
+  html_with_breakline: "Hello <br /> world!"
 }
 
 const template: Obj<RenderHTML> = {
   b: ({ children }) => <b>{children}</b>,
   small: ({ children }) => <small>{children}</small>,
-  span: ({ attributes, children }) => <span {...attributes}>{children}</span>
+  span: ({ attributes, children }) => <span {...attributes}>{children}</span>,
+  br: () => <br />
 }
 
 describe("format translation", () => {
@@ -100,6 +102,14 @@ describe("format translation", () => {
         createRoot(container).render(<>{message}</>)
       })
       expect(container.innerHTML).toBe("Hello <span id=\"id\" class=\"class1 class2\" data-testid=\"test\">world</span>!")
+    })
+
+    it ("HTML with breakline", () => {
+      const message = format(translations, 'html_with_breakline', undefined, template)
+      act(() => {
+        createRoot(container).render(<>{message}</>)
+      })
+      expect(container.innerHTML).toBe("Hello <br> world!")
     })
   })
 })

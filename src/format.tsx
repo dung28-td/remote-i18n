@@ -3,7 +3,8 @@ import { Obj, RenderHTML } from "./types"
 
 const LOOKUP_ID_REGEX = /{&(?<id>.*?)}/
 const VALUE_REGEX = (value: string) => new RegExp(`{${value}}`, 'g')
-const HTML_REGEX = /<(?<tag>\w+?)\s*(?<attributes>.*?)\s*>(?<children>.*?)<\/\1>/
+const HTML_REGEX = /<(?<tag>\w+)\s*(?<attributes>.*?)\s*>(?<children>.*?)<\/\1>/
+const HTML_WITHOUT_CHILDREN_REGEX = /<(?<tag>\w+)\s*(?<attributes>.*?)\s*\/>/
 const HTML_ATTRIBUTE_REGEX = /(?<key>.+?)=(["'])(?<value>.*?)\2/
 
 const tryParseAttributes = (_attributes: string, result: Obj<string> | undefined = undefined): Obj<string> | undefined => {
@@ -48,7 +49,7 @@ const tryReplaceLookup = (message: string, translations: Obj<string>): string =>
 const tryReplaceTemplate = (message: string, template?: Obj<RenderHTML>): string | JSX.Element => {
   if (!template) return message
 
-  const match = message.match(HTML_REGEX)
+  const match = message.match(HTML_REGEX) || message.match(HTML_WITHOUT_CHILDREN_REGEX)
   if (!match) return message
 
   const { tag, attributes: _attributes, children: _children } = match.groups!
@@ -58,7 +59,7 @@ const tryReplaceTemplate = (message: string, template?: Obj<RenderHTML>): string
   const [prefix, _suffix] = message.split(match[0])
 
   const attributes = tryParseAttributes(_attributes)
-  const children = tryReplaceTemplate(_children, template)
+  const children = _children ? tryReplaceTemplate(_children, template) : undefined
   const suffix = tryReplaceTemplate(_suffix, template)
 
   return (

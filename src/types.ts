@@ -42,7 +42,7 @@ export interface Obj<T> {
 
 export interface RenderHTMLProps {
   attributes: Obj<string> | undefined
-  children: string | JSX.Element
+  children: string | JSX.Element | undefined
 }
 
 export type RenderHTML = (props: RenderHTMLProps) => JSX.Element
